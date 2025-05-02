@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Best Prime Cuts Steakhouse</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="shortcut icon" href="images/steak-icon.svg" />
+</head>
+
+<body class="font-sans bg-red-50 text-gray-800 min-h-screen overflow-hidden">
+  <!-- Header -->
+  <header class="text-center py-8 bg-white shadow-md fixed top-0 w-full z-10">
+    <h1 class="text-4xl md:text-5xl font-extrabold text-red-700">Best Prime Cuts Steakhouse</h1>
+    <p class="text-gray-600 mt-2 text-lg">Touch. Order. Enjoy.</p>
+  </header>
+
+  <!-- Main Section -->
+  <main class="max-w-7xl mx-auto px-4 pt-40 pb-12 grid lg:grid-cols-2 gap-10">
+    <!-- Menu -->
+    <section class="bg-white p-8 rounded-2xl shadow-xl overflow-y-auto max-h-[80vh]">
+      <h2 class="text-3xl font-bold mb-6 text-red-700">Select Your Steaks</h2>
+      <div id="menu-items" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <!-- Menu items will be dynamically filled -->
+      </div>
+      <button id="add-to-order" class="mt-8 w-full bg-red-600 hover:bg-red-700 text-white py-4 px-6 rounded-xl text-xl font-semibold">
+        ➕ Add to Order
+      </button>
+    </section>
+
+    <!-- Order Summary -->
+    <section class="bg-white p-8 rounded-2xl shadow-xl max-h-[80vh] overflow-y-auto">
+      <h2 class="text-3xl font-bold mb-4 text-red-700">Your Order</h2>
+      <ul id="order-summary" class="space-y-3 text-lg font-medium"></ul>
+      <div class="mt-6 text-2xl font-bold">Total: ₱<span id="total-price">0</span></div>
+
+      <!-- Payment -->
+      <div class="mt-8">
+        <h3 class="text-xl font-semibold mb-2">Choose Payment Method</h3>
+        <div class="flex flex-wrap gap-4 text-lg">
+          <label><input type="radio" name="payment-method" value="credit-card" checked /> Credit Card</label>
+          <label><input type="radio" name="payment-method" value="paypal" /> PayPal</label>
+          <label><input type="radio" name="payment-method" value="cash" /> Cash</label>
+        </div>
+
+        <div class="mt-6">
+          <label for="amount-paid" class="block text-lg text-gray-600 mb-2">Enter Payment Amount (₱)</label>
+          <input type="number" id="amount-paid" class="w-full p-3 border-2 rounded-lg text-xl text-center" min="0" />
+          <button id="calculate-change" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-xl text-lg font-semibold">
+            💵 Calculate Change
+          </button>
+        </div>
+
+        <div id="change-section" class="mt-6 hidden">
+          <p class="text-xl font-bold">Change: ₱<span id="change-amount">0</span></p>
+        </div>
+
+        <div id="receipt" class="mt-8 hidden border-t pt-6">
+          <h3 class="text-2xl font-bold mb-4">🧾 Receipt</h3>
+          <div id="receipt-details" class="text-base leading-relaxed"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Script -->
+  <script>
+    const menuData = [
+      { name: "Ribeye Steak", price: 899, img: "images/ribeye.jpg" },
+      { name: "T-Bone Steak", price: 1099, img: "images/tbone.jpg" },
+      { name: "Porterhouse", price: 1199, img: "images/porterhouse.jpg" },
+      { name: "Fillet Mignon", price: 999, img: "images/fillet.jpg" },
+      { name: "Skirt Steak", price: 749, img: "images/skirt.jpg" },
+      { name: "Sirloin Steak", price: 699, img: "images/sirloin.jpg" },
+      { name: "Flank Steak", price: 849, img: "images/flank.jpg" },
+      { name: "Striploin Steak", price: 999, img: "images/striploin.jpg" },
+      { name: "Flatiron Steak", price: 849, img: "images/flatiron.jpg" },
+      { name: "Chuck Eye Steak", price: 799, img: "images/chuckeye.jpg" },
+    ];
+
+    const menuContainer = document.getElementById('menu-items');
+    menuData.forEach(item => {
+      const menuItem = document.createElement('div');
+      menuItem.className = 'bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition';
+      menuItem.innerHTML = `
+        <img src="${item.img}" alt="${item.name}" class="w-full h-40 object-cover" />
+        <div class="p-4">
+          <h3 class="text-xl font-bold">${item.name}</h3>
+          <p class="text-lg text-gray-500 mb-2">₱${item.price}</p>
+          <input type="number" min="0" value="0" class="qty w-full border-2 rounded p-2 text-center text-lg" data-name="${item.name}" data-price="${item.price}" />
+        </div>
+      `;
+      menuContainer.appendChild(menuItem);
+    });
+
+    const addBtn = document.getElementById('add-to-order');
+    const orderList = document.getElementById('order-summary');
+    const totalDisplay = document.getElementById('total-price');
+    const calculateChangeBtn = document.getElementById('calculate-change');
+    const changeSection = document.getElementById('change-section');
+    const changeAmount = document.getElementById('change-amount');
+    const amountPaidInput = document.getElementById('amount-paid');
+
+    addBtn.addEventListener('click', () => {
+      orderList.innerHTML = '';
+      let total = 0;
+
+      document.querySelectorAll('.qty').forEach(input => {
+        const qty = parseInt(input.value);
+        const name = input.dataset.name;
+        const price = parseFloat(input.dataset.price);
+
+        if (qty > 0) {
+          const itemTotal = qty * price;
+          total += itemTotal;
+
+          const li = document.createElement('li');
+          li.textContent = `${name} x ${qty} — ₱${itemTotal}`;
+          orderList.appendChild(li);
+        }
+      });
+
+      totalDisplay.textContent = total.toFixed(2);
+    });
+
+    calculateChangeBtn.addEventListener('click', () => {
+      const total = parseFloat(totalDisplay.textContent);
+      const amountPaid = parseFloat(amountPaidInput.value);
+      const receipt = document.getElementById('receipt');
+      const receiptDetails = document.getElementById('receipt-details');
+      const selectedPayment = document.querySelector('input[name="payment-method"]:checked').value;
+
+      if (isNaN(amountPaid) || amountPaid < total) {
+        alert('Please enter a valid amount paid that is greater than or equal to the total.');
+        return;
+      }
+
+      const change = amountPaid - total;
+      changeAmount.textContent = change.toFixed(2);
+      changeSection.classList.remove('hidden');
+
+      let receiptHTML = '<ul class="mb-4">';
+      document.querySelectorAll('.qty').forEach(input => {
+        const qty = parseInt(input.value);
+        const name = input.dataset.name;
+        const price = parseFloat(input.dataset.price);
+
+        if (qty > 0) {
+          const itemTotal = qty * price;
+          receiptHTML += `<li>${name} x ${qty} — ₱${itemTotal.toFixed(2)}</li>`;
+        }
+      });
+      receiptHTML += '</ul>';
+
+      receiptHTML += `
+        <p><strong>Total:</strong> ₱${total.toFixed(2)}</p>
+        <p><strong>Amount Paid:</strong> ₱${amountPaid.toFixed(2)}</p>
+        <p><strong>Change:</strong> ₱${change.toFixed(2)}</p>
+        <p><strong>Payment Method:</strong> ${selectedPayment.replace('-', ' ').toUpperCase()}</p>
+        <p class="text-sm text-gray-500 mt-4">Thank you for dining with Prime Cuts Steakhouse!</p>
+      `;
+
+      receiptDetails.innerHTML = receiptHTML;
+      receipt.classList.remove('hidden');
+    });
+  </script>
+</body>
+
+</html>
