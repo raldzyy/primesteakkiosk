@@ -1,0 +1,134 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Steak Landing Page</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap" rel="stylesheet" />
+    <link rel="shortcut icon" href="images/icon.svg" />
+    <link rel="stylesheet" href="css/styles.css" />
+    </head>
+
+    <body>
+    <!-- Header Section -->
+    <header>
+        <div class="brand">
+        <h4>Best Prime Cuts Steakhouse</h4>
+     
+        </div>
+
+        <div class="header-section">
+        <div class="hero-heading">
+            <h1 class="heading-primary">Delicious <br> Food Is Waiting <br> For You</h1>
+            <a href="menu.html">
+            <button class="button button-active view-menu">
+                View Menu 
+                <span><img src="images/steakbackground.png" alt="Arrow right" /></span>
+            </button>
+            </a>
+        </div>
+
+        <div class="header-image">
+            <img src="images/istockphoto-1316130553-612x612.jpg" alt="Vegetable eggs" />
+        </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Section 1 -->
+        <section class="section-1">
+        <div class="menu-items-column">
+
+            <!-- Menu Item 1 -->
+            <div class="menu-item-card menu-item-card-1">
+            <img src="images/prime-steak-club-angel.jpg" class="menu-item-image-1" alt="Prime Steak" />
+            <div class="menu-item-type-1">
+                <div class="menu-item-details menu-item-details-1">
+                <h3>Prime Steak</h3>
+                <p>
+                    Prime beef is produced from young, well-fed beef cattle. It has abundant marbling and is generally sold in restaurants and hotels. Prime roasts and steaks are excellent for dry-heat cooking such as broiling, roasting, or grilling.
+                </p>
+                <h4>$150.00</h4>
+                </div>
+                
+               
+            </div>
+            
+            </div>
+
+            <!-- Menu Item 2 -->
+            <div class="menu-item-card menu-item-card-1">
+            <img src="images/angusbeef.jpeg" class="menu-item-image-1" alt="Angus Prime Steak" />
+            <div class="menu-item-type-1">
+                <div class="menu-item-details menu-item-details-1">
+                <h3>Angus Prime Steak</h3>
+                <p>
+                    Angus is a breed of cattle known widely for its marbling, consistency, and juicy flavors. While it can fall into one of the top USDA classifications, Angus refers to the breed, not the grade.
+                </p>
+                <h4>$500.00</h4>
+                </div>
+            
+            </div>
+            
+            </div>
+
+
+                    
+                
+                    <!-- repeat 7 more times with different content -->
+                </div>
+                
+
+                <div class="description p-6 bg-white rounded-lg shadow-md max-w-xl mx-auto text-center">
+                    <h2 class="text-3xl font-bold text-red-800 mb-4 leading-tight">
+                    Grilled Goodness on the Go<br>
+                    <span class="text-orange-600">Tastiest BBQ in Town!</span>
+                    </h2>
+                    <p class="text-gray-700">
+                    At <strong>Best Steak Ever</strong>,Sizzling Steaks on the Spot
+                    The Best Cuts in Town!
+                    At Taste To Go Steakhouse, we fire up bold, smoky flavors with every order — no shortcuts, just quality meat grilled to perfection. From our juicy ribeye to tender sirloin skewers, every bite packs rich seasoning and that perfect sear. Fast, flavorful, and always sizzling — this is steak that speaks for itself.
+
+                    </p>
+                </div>              
+            </section>
+
+            <!-- Section 2 -->
+            <section class="section-2">
+                <div class="description bg-yellow-100 p-6 rounded-lg shadow-md max-w-2xl mx-auto text-center mt-10">
+                    <h2 class="text-2xl font-bold text-red-700 mb-4">
+                    🔥 Special offers and discounts available on select items!
+                    </h2>
+                    <p class="text-gray-800">
+                    Hungry for that flame-grilled flavor? We’ve got sizzling deals just for you!
+    Enjoy weekly specials on our best-selling steaks and grilled favorites — perfect for hearty lunches, family dinners, or weekend indulgence. Swing by the steakhouse or check online to see what’s hot off the grill!
+                    </p>
+                </div>              
+
+                <div class="pasta-image">
+                    <img src="images/tomahawk.avif" alt="Pasta">
+                    <div class="discount tag">
+                        
+                    </div>
+                </div>
+            </section>
+
+    
+        <!-- JavaScript -->
+        <script>
+            let likeButtons = document.querySelectorAll("button.like-button");
+            let smallerScreens = window.matchMedia("(max-width: 900px)");
+
+            for (let i = 0; i < likeButtons.length; i++) {
+                likeButtons[i].addEventListener("click", () => {
+                    likeButtons[i].classList.toggle("favourite");
+                    if (smallerScreens.matches) {
+                        likeButtons[i].classList.remove("like-button-hover");
+                    }
+                })
+            }
+        </script>
+    </body>
+
+    </html>
